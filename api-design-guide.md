@@ -1,6 +1,12 @@
 
 ## Proposal: API Design Guide
 
+### What is this proposal?
+
+This proposal suggests a design guide for the proposal and development of new APIs. An API is defined as a 
+
+
+
 An API is one form of feature that may be proposed by the contributor. Any new APIs can be split into two categories:
 - new API for an existing building block e.g.: adding query state API to state management building block 
 - new API in a new building block e.g.: configuration building block and adding APIs for that
