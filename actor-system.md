@@ -1,7 +1,9 @@
+## Proposal: Migrating reminder and timer functionality to the control plane
+
 
 ### What does this propose?
 
-This proposal suggests that we make some structural changes to the actor system in Dapr in order to improve performance and increase observability. In particular, this proposal focuses on the reminder and timer storage and dispatch model and the gRPC communication between daprd and the placement service as well as metrics to be added for improved observation, performance monitoring and diagnosis. 
+This proposal suggests that we make some structural changes to the actor system in Dapr in order to improve performance and increase observability. In particular, this proposal focuses on the reminder and timer storage and dispatch model and the gRPC communication between daprd and the placement service as well as metrics to be added for improved observation, performance monitoring and diagnosis. The primary goal of this proposal is to move the code that is responsible for actor management into the control plane to simplify and centralize the actor subsystem.
 
 #### Increase observability of the actor system 
 
@@ -83,12 +85,16 @@ Placement service will now be responsible for three new pieces of functionality:
 
 Using a time-base bucketing system (https://github.com/johnewart/go-timescheduler), the leader in the placement cluster will keep track of all the reminders that are scheduled across the `daprd` nodes that are connected to it. This has the advantage of being performant (time is divided into N + 1 buckets, the +1 being "everything past the last bucket") by decreasing the amount of data that is being evaluated, as well as easy to bulk load from storage with O(n) cost to rebuild the structure. 
 
-Internally, each placement service will keep synchronized copies of the timer and reminder data in the same way it stores the actor placement data but only the leader will keep track of the scheduling data. The scheduling data is only needed by the primary and if / when a new node takes over from the existing leader, it can quickly reconstruct the schedule itself from the persisted data. 
+Internally, each placement service will keep synchronized copies of the timer and reminder data in the same way it stores the actor placement data but only the leader will keep track of the scheduling data. Because the primary will be responsible for dispatching (since that is the node that `daprd` clients remain connected to), the scheduling data is only needed by the primary node. If / when a new node takes over from the existing leader, it can quickly reconstruct the schedule itself from its copy of the persisted data. 
 
 
 ##### Storage
 
-The placement service will persist and synchronize the timer and reminder data in a similar fashion to the way it manages and stores placement data. Currently this is done using BoltDB but the actual storage mechanism itself is not as critical as the synchronization / dissemination data. The data that will now be stored in addition to placement data will include timer and reminder raw data (actor, schedule, etc.) that is required to reconstruct the scheduling data in the event of a failover or recovery. 
+The placement service will persist and synchronize the timer and reminder data in a similar fashion to the way it manages and stores placement data. Currently this is done using BoltDB but the actual storage implementation details are not critical as long as the performance characteristics are sufficient for our read-heavy workload. The data that will now be stored in addition to placement data on-disk will include the timer and reminder raw data (actor, schedule, etc.) that is required to reconstruct the scheduling data in the event of a failover or recovery.
+
+> If we choose to put a limit on the size of reminder / timer data then we can choose to store the entire reminder table in memory alongside the scheduling data because we will know the memory requirements w.r.t the number of reminder and timers being stored ahead of time. I do not believe we currently impose any limits on the size of the data attached to a reminder
+
+_Notes about write order:_ This should work as-is without having to worry about merging data between nodes because the existing implementation of  communication between `daprd` and the placement service cluster is such that `daprd` will only talk to a node that is the leader. As a result, if we opt for writing to stable storage on the leader first and then sending the data to the other nodes in the cluster for delayed writes to their stable storage, data-loss should not pose a serious concern.
 
 
 ##### Dispatching
@@ -130,6 +136,8 @@ Currently, `daprd` sends all of the known actor types at once to the placement s
 
 ### Measurement of success
 
+(These numbers are back-of-the napkin type numbers and very much open to feedback or discussion) 
+
 The goal of this change is to improve the performance of actor dispatch and registration by moving it away from daprd and into placement service. In order to ensure that we have not only improved performance  but also kept existing functionality we will need to have tests that prove both of these things. 
 
 The goal for reminder registration is to be able to register new reminders in consistent time (i.e adding new reminders should not increase in duration proportionally to the number of reminder already registered). A reasonable target should be registering a new reminder or timer should take <= 10msec consistently, regardless of the number of currently registered reminders or timers. 
@@ -143,6 +151,29 @@ In addition, the application should be able to expose many different types of ac
 * Timer dispatch should be within 50msec of scheduled time
 * Dispatch message should be delivered to `daprd` in < 10msec over gRPC
 * Applications should be capable of registering at least 20,000 different types of actors
+
+
+### Expected behavior throughout the lifecycle of this feature
+
+#### Alpha
+
+* Control-plane reminders and timers are *opt-in* through a configuration / flag
+* Automatic migration of data will not happen, users opting in to this new feature will start with a blank slate
+* The existing reminder / timer components will continue to operate as-is with the current performance profile / behavior
+* (Open for discussion) Tools to manually migrate data from existing actor store to control plane?
+
+#### Beta
+
+* Control-plane implementation will become the default implementation and uses can *opt-out* through configuration
+* Automatic, non-destructive, migration of data will be enabled (i.e moving data from the existing actor state store to the control plane)
+* The current (i.e in-sidecar) implementation will be available (but again, only for those choosing to opt-out of the new implementation)
+
+#### Stable
+
+* Control-plane implementation will be the default behavior
+* Previous, non-control-plane, implementation will not be available and will be removed
+
+
 
 
 ### What needs to be done
