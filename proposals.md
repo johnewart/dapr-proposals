@@ -91,6 +91,14 @@ The templates for this must include the following structure:
 
 
 
+## Proposal -> Implementation Process
+
+* The proposal should be reviewed by the community and the author(s) of the proposal
+* The author(s) address questions/comments in the proposal and adjust the proposal based on feedback
+* Once the feedback phase is complete, and a proposal has been accepted, the proposal will be merged
+* Release of the feature will be slated for a specific release version of Dapr
+
+
 ## Feature lifecycle outline
 
 Features in Dapr have a lifecycle (e.g [Components](https://docs.dapr.io/operations/components/certification-lifecycle/)) and, as such, should have a defined set of milestones / requirements for progression between the lifecycle phases. For example, can a user expect from a feature when it is Alpha quality? Once that is released, what is the plan to progress from Alpha to Beta, and the subsequent expectations? What is the expectation when this feature becomes Stable? It is important to identify what functionality or perfomance guarantees we are making to users of Dapr when adding something new.
