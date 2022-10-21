@@ -3,9 +3,11 @@
 
 ### What is this proposal?
 
-This proposal suggests a design guide for the proposal and development of new APIs. An API is defined as a 
+This proposal suggests a design guide for the proposal and development of new APIs in Dapr. An API is defined as any functionality that is exposed to an end user that is consumed programmatically. This is intended to provide authors with examples and requirements that need to be included when designing a new API (or enhancing an existing API) so that it is clear what is expected. 
 
+### Why propose an API design guide?
 
+Just like providing some basic scaffolding for proposals themselves, APIs should have a consistent set of information when being designed so that they can be 
 
 An API is one form of feature that may be proposed by the contributor. Any new APIs can be split into two categories:
 - new API for an existing building block e.g.: adding query state API to state management building block 
@@ -19,78 +21,102 @@ Similarly addition of `dapr/cli` commands may be mentioned, but the guidance for
 Additionally the scope is limited to definition of a new API only. Enhancement to existing stable APIs shall be done seperately.
 
 
+### API development cycle
 
 
-#### Proposed New API lifecycle stages
+#### Proposal -> Implementation Process
 
-For new APIs, it is proposed to set three stages for the lifecycle of the API:
-- Alpha
-  - API is not production ready yet and might contain bugs
-  - Recommended for only non-business-critical uses because of potential for incompatible changes in subsequent releases
-- Beta
-  - API is not production ready yet
-  - Multiple components implement the API and API contract is mostly finalized
-  - Recommended for only non-business-critical uses because of potential for incompatible changes in subsequent releases
-- Stable
-  - API is ready for production usage
-  - Performance numbers are published for the API
+1. The proposal should be reviewed by the community and the author(s) of the proposal
+2. The author(s) address questions/comments in the proposal and adjust the proposal based on feedback 
+3. Once the feedback phase is complete, and a proposal has been accepted, the proposal will be merged 
+4. Development of the feature will be slated for a specific release version of Dapr
 
-#### Guidance for Alpha stage
 
-**Prerequisite**
 
-For any new `dapr` APIs, it is required to:
-- Create a new Build Phase Proposal (assumes that the design phase is completed) in `dapr/dapr` repository, detailing
-  - Relevant high level design
-  - Contract for the API
-    - HTTP and gRPC APIs should be consistent in behavior and user experience.
-  - Additions to existing components / creation of new components for this API
-  - Clarified Scope for current and following releases
-  - Limitations
-  - Code examples
-- The issue should be reviewed by community and owner of the issue is accountable to
-  - Address questions/comments in the proposal
-  - Incorporate Review feedback
-  - Align with maintainers on the build phase proposal scope for implementation
-- Once a proposal has been accepted, the final design, links to relevant issues or comments that provide context on design decisions, and any future changes to the API  must be added to a markdown file under “docs/decision_records/api”
-  - The decision record must be maintained to accurately reflect the latest state of the API.
+### API Lifecycle expectations
 
-**Creating new API as part of a new building block in `dapr/dapr`**
+APIs are expected to go through three stages in their lifetime: Alpha, Beta and Stable. For each of these lifecycles it should be clear to a user what they can expect. In the case of an API, those expectations are:
 
-- Both HTTP and gRPC protocols need to be supported for the new API
-- Any changes to existing API(assumes it is alpha see open question 1) in an “alpha building block” as part of implementing the new API
-  - Mandates additional / modifications to existing UTs
-  - Existing E2E tests if any must execute successfully
-- Documentation:
-  - For HTTP API – Dapr API reference doc must be updated
-  - Building block concepts page must be updated
-- At least one SDK shall have implementation that exposes the new APIs from runtime (giving preference to gRPC protocol in handcrafted SDKs for communication from App to Dapr)
-- Quickstarts:
-  - Quickstarts should be defined for the new API to enable users to easily explore the new functionality provided by the API
-- Dapr CLI changes
-  - If a new command/modifications to existing command is required to facilitate ease of use of the new API, it should be defined in the Dapr CLI
+* **Alpha**
+ * API is not production ready yet and might contain bugs
+ * Recommended for only non-business-critical uses because of potential for incompatible changes in subsequent releases
+ * May not be backwards-compatible with an API it intends to replace
+ * May not be highly performant or support all SDKs
+  
+* **Beta**
+ * API is not production ready yet
+ * Multiple components implement the API and API contract is mostly finalized
+ * Recommended for non-business-critical use only due to potentially backwards-incompatible changes in subsequent releases
+ * Should have support in (at least) the primary SDKs (i.e Python, Go, Java?)
+ * Performance should be production-ready but may not be in all cases
 
-**Creating new API as part of an existing building block in `dapr/dapr`**
+* **Stable**
+ * API will not undergo backwards-incompatible changes
+ * API is considered ready for production usage
+ * Performance numbers are published for the API and there are tests and safeguards in place to prevent regression
 
-- Both HTTP and gRPC protocols must be supported.
-- Behavior of existing APIs must not be modified as part of implementing the new API unless the other API is also in alpha stage. Any such changes to existing alpha APIs:
-  - Mandates additional / modifications to existing UTs
-  - Existing E2E tests if any must execute successfully
-- If the new API is considered an optimization to an existing API (say addition of BulkGetSecrets vs GetSecret)
-  - The performance improvement gained due to this API should be documented
-  - Guidance must be provided to the users in docs as to when to use this API vs using the older one
-- Documentation :
-  - For HTTP API – Dapr API reference doc must be updated
-  - Breaking changes to existing alpha APIs must be tracked and updated in docs/release notes
-- Quickstarts for this new API must be added
-  - This will help users comprehend the usage of the API
-  - Understand the difference between this API and existing APIs. (if its an optimization)
-- Dapr CLI changes
-  - If a new command/modifications to existing command is required to facilitate ease of use of the new API, it should be defined in the Dapr CLI
-- At least one SDK must support this API. Multiple SDKs may support this API
-- E2E tests for the new API in `dapr/dapr` must be added:
-  - If this new API interacts with an existing API, E2E testing that interaction must be added
 
+### Design Requirements for APIs
+
+For any API (new or updates), the following must be included in the proposal:
+
+  * Relevant high level design
+  * Proposed contract for the API
+    * HTTP and gRPC APIs should be consistent in behavior and user experience.
+  * Identifying what additions to existing components / creation of new components are required for this API (if any)
+  * Scope for current and following releases (i.e what can be expected from this iteration and what is being pushed down the road)
+  * Known limitations, where applicable
+    * Performance issues
+    * Compatibility issues
+  * Code examples (pseudocode is acceptable)
+
+
+#### Proposal -> Implementation Process
+
+1. The proposal should be reviewed by the community and the author(s) of the proposal
+2. The author(s) address questions/comments in the proposal and adjust the proposal based on feedback 
+3. Once the feedback phase is complete, and a proposal has been accepted, the proposal will be merged 
+4. Development of the feature will be slated for a specific release version of Dapr
+
+
+### Requirements for API changes
+
+No matter if the change is a net-new API or an update to an existing API, the following is required:
+
+* Changes to documentation must be identified and written
+* Existing E2E and performance tests must pass
+* If a new command/modifications to existing command is required to facilitate ease of use of the new API, related code must be added to the Dapr CLI 
+
+#### Creation of new APIs
+
+* Both HTTP and gRPC protocols need to be supported for the new API
+* Documentation must be provided for the API 
+  * HTTP API must be added to Dapr documentatio
+* Issues should be added in `dapr/quickstarts` to create examples for the new API to enable users to easily explore the new functionality provided by the API
+* If the new API is considered an _optimization_ of an existing API (say, the addition of `BulkGetSecrets` alongside `GetSecret`) then:
+  * The performance improvement gained due to this API should be documented
+  * Guidance must be provided to the users in docs as to when to use this API vs using the older one
+* Performance tests should (though preferably must) exist for this new API
+* _Must_ include new E2E tests that exercise them
+
+
+#### Updates to existing APIs
+
+Depending on the phase of the existing API, the proposed changes may or may not be backwards-incompatible
+
+_Backwards-**incompatible** changes_ 
+
+* May _only_ be proposed to Alpha or Beta APIs
+* Require updates to existing E2E tests to support these changes
+* Breaking changes to existing Alpha or Beta APIs must be tracked and updated in docs/release notes
+
+_Backwards-**compatible** changes_
+
+* May be proposed to _any_ API
+* Proposed changes to both the HTTP and gRPC API must be included
+
+
+### Requirements for building-block changes
 
 Finally on addition of a new API, there may be addition of the capability to either an existing component or if it is a new building block, creation of a new set of components in the `dapr/components-contrib` repo.
 
@@ -112,36 +138,44 @@ Finally on addition of a new API, there may be addition of the capability to eit
 - Ensure successful execution of existing conformance and certification tests for any modified components
 
 
-#### Requirements for graduating an API from Alpha to Beta stage
 
-In addition to the requirements for an Alpha API, the following requirements must be met so that the API can graduate to Beta.
+### Progression of an API 
 
-**In `dapr/dapr`**
-- E2E test with extensive positive and negative scenarios must be defined
-- Most if not all changes needed in the user facing structures must be completed
-  - Approvals for changes to the user facing request and response in a Beta API, will be handled on a case by case basis (Reduce number of breaaking changes)
-- Multiple SDKs must have support for this API
-- Documentation of the API must be up-to-date for the API/Building block
-- Quickstarts must be defined for the API allowing users to quickly explore the API
-- Performance tests may be added(if not already available in Alpha stage)/updated
-- This API must have been a part of atleast one prior release in Dapr
+#### Alpha to Beta 
 
-**In `dapr/components-contrib`**
-- Conformance test must be added/updated. (this is for scenario for new building block not having conformance test in the Alpha stage)
-- Conformance tests should test both positive and negative cases 
-- Certification tests should be added to the different components and this API must be exercised in the certification tests
-- Multiple component implementations must be present for this API
+In addition to the requirements that are required of any Alpha API, the following requirements must be met so that the API can graduate to Beta. For an API to be promoted to Beta, it must exist for at least one release cycle after its initial addition as Alpha. (i.e something added in 1.10 could become  Beta in 1.12, having been stabilized through 1.11)
 
-#### Requirements for graduating an API from Beta to Stable
+For all APIs, the following criteria need to be met: 
 
-In addition to the requirements for a Beta API, the following requirements must be met so that the API can graduate to Stable.
+* E2E test with extensive positive and negative scenarios must be defined
+* Most (if not all) changes needed in the user facing structures must be considered to be complete (in order to reduce the number of breaking changes)
+* All "core" SDKs must have support for this API _(Python, Go, .NET, Java?)_
+* Documentation of the API must be completely up-to-date with any changes tha
+* Quickstarts must be defined for the API allowing users to quickly explore the API
+* Performance tests should be added (if not already available in Alpha stage) / updated where relevant
 
-**In `dapr/dapr`**
-- This API must have reached Beta stage in atleast one prior release in Dapr
-- E2E scenarios must be well defined and must be executed across at least two different components that implement this API
-- Performance tests must be added/updated (this is for scenario where new building block does not have performance tests in the Alpha/Beta stage)
-- The Performance numbers must be added to the documentation.
 
-**In `dapr/components-contrib`**
-- Conformance tests testing both positive and negative cases must be defined
-- Certification tests for multiple components exercising this API must be defined
+For **building blocks** to progress, the following criteria are required:
+
+* Conformance test(s) must be added/updated. (this is for scenario for new building block not having conformance test in the Alpha stage)
+* Conformance tests must test both positive and negative cases (i.e deliberately attempt to break them)
+* Certification tests should be added to the different components and this API must be exercised in the certification tests
+* Multiple implementations must be present for this building block
+
+#### Beta to Stable
+
+In addition to the requirements for a Beta API, the following requirements must be met so that the API can graduate to Stable. Similar to the previous phase change, this API must have been in the Beta phase for at least one full release _without any breaking changes_. In addition, the following criteria apply:
+
+* E2E scenarios must be well defined and comprehensive 
+* Performance tests must be added/updated (this is for scenario where new building block does not have performance tests in the Alpha/Beta stage)
+* Expected performance data must be added to documentation
+
+For **building blocks** to progress, the following must also be true:
+
+* E2E tests must exercise _at least two different implementations_ of the building block's API
+* Conformance tests testing both positive and negative cases must be defined
+* Certification tests for multiple components implementing this API must be defined
+
+
+
+
