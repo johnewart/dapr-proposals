@@ -28,9 +28,9 @@ Create a new repository (`dapr/proposals`) and begin to store new proposals ther
 
 To make a proposal, a user would fork the repository, add their proposal (and any related assets) into the repository in their fork and then open a pull request against the main repository. The lifecycle of proposals would then look something like:
 
-*Draft:* Changes in personal fork 
-*Under Review:* Pull Request 
-*Accepted:* Merged into main repo 
+* **Draft** Changes made in personal fork 
+* **Ready For Review** Pull request opened against `dapr/proposals`
+* **Accepted** Pull request has been merged into `dapr/proposals` repo 
 
 As progress is made on an accepted proposal (i.e parts are completed) then PR's can be made to update the check-boxes on those sections and issues / PRs / code lines can be linked to those PRs pointing to where to look for the work done. 
 
