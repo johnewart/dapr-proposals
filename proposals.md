@@ -7,6 +7,7 @@ This proposal is to formalize the structure and lifecycle to proposals with thre
 1. Define the proposal process as two discrete phases 
 2. Create a template for each of these two phases
 3. Define the core requirements for a feature that is being proposed to be considered complete
+4. Provide a common language for proposals (terminology, keywords, etc.) 
 
 ## Background
 
@@ -121,3 +122,22 @@ Stable:
  
 
 
+## Proposal Language
+
+This information can be included either in the template or in a README -- and is designed to provide a common language for proposals so that the expectations are clear. 
+
+
+### Terminology 
+
+_(This is an incomplete list and should / will be expanded over time)_
+
+| Term	| Meaning                                                                                                                                                     |
+|------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Building block	| Capabilities that solve common developmental challenges in building distributed applications                                                                | 
+| API	| Application Programming Interface - functionality exposed to end-users that can be used to interact with Dapr's building blocks in the application they are building  | 
+| Feature |	New or enhanced functionality that is being added to Dapr |
+
+### Keywords
+
+The keywords “MUST”, “MUST NOT”, "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", 
+and "OPTIONAL" in this document are to be interpreted as described in RFC 2119.
