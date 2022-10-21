@@ -26,16 +26,31 @@ Additionally the scope is limited to definition of a new API only. Enhancement t
 
 #### Proposal -> Implementation Process
 
+Just like any other proposal 
+
 1. The proposal should be reviewed by the community and the author(s) of the proposal
 2. The author(s) address questions/comments in the proposal and adjust the proposal based on feedback 
 3. Once the feedback phase is complete, and a proposal has been accepted, the proposal will be merged 
-4. Development of the feature will be slated for a specific release version of Dapr
+4. Release of the feature will be slated for a specific release version of Dapr
 
+### Design Requirements for APIs
+
+For any API (new or updates), the following must be included in the proposal:
+
+  * Relevant high level design
+  * Proposed contract for the API
+    * HTTP and gRPC APIs should be consistent in behavior and user experience.
+  * Identifying what additions to existing components / creation of new components are required for this API (if any)
+  * Scope for current and following releases (i.e what can be expected from this iteration and what is being pushed down the road)
+  * Known limitations, where applicable
+    * Performance issues
+    * Compatibility issues
+  * Code examples (pseudocode is acceptable)
 
 
 ### API Lifecycle expectations
 
-APIs are expected to go through three stages in their lifetime: Alpha, Beta and Stable. For each of these lifecycles it should be clear to a user what they can expect. In the case of an API, those expectations are:
+APIs are expected to go through three stages in their lifetime: Alpha, Beta and Stable. For each of these phases it should be clear to a user what they can expect. In the case of an API, those expectations are:
 
 * **Alpha**
    * API is not production ready yet and might contain bugs
@@ -56,27 +71,6 @@ APIs are expected to go through three stages in their lifetime: Alpha, Beta and 
    * Performance numbers are published for the API and there are tests and safeguards in place to prevent regression
 
 
-### Design Requirements for APIs
-
-For any API (new or updates), the following must be included in the proposal:
-
-  * Relevant high level design
-  * Proposed contract for the API
-    * HTTP and gRPC APIs should be consistent in behavior and user experience.
-  * Identifying what additions to existing components / creation of new components are required for this API (if any)
-  * Scope for current and following releases (i.e what can be expected from this iteration and what is being pushed down the road)
-  * Known limitations, where applicable
-    * Performance issues
-    * Compatibility issues
-  * Code examples (pseudocode is acceptable)
-
-
-#### Proposal -> Implementation Process
-
-1. The proposal should be reviewed by the community and the author(s) of the proposal
-2. The author(s) address questions/comments in the proposal and adjust the proposal based on feedback 
-3. Once the feedback phase is complete, and a proposal has been accepted, the proposal will be merged 
-4. Development of the feature will be slated for a specific release version of Dapr
 
 
 ### Requirements for API changes
