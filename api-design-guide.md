@@ -7,7 +7,7 @@ This proposal suggests a design guide for the proposal and development of new AP
 
 ### Why propose an API design guide?
 
-Just like providing some basic scaffolding for proposals themselves, APIs should have a consistent set of information when being designed so that they can be 
+Just like providing some basic scaffolding for proposals themselves, APIs must meet a certain bar when being designed so that they can be 
 
 An API is one form of feature that may be proposed by the contributor. Any new APIs can be split into two categories:
 - new API for an existing building block e.g.: adding query state API to state management building block 
@@ -20,18 +20,6 @@ Similarly addition of `dapr/cli` commands may be mentioned, but the guidance for
 
 Additionally the scope is limited to definition of a new API only. Enhancement to existing stable APIs shall be done seperately.
 
-
-### API development cycle
-
-
-#### Proposal -> Implementation Process
-
-Just like any other proposal 
-
-1. The proposal should be reviewed by the community and the author(s) of the proposal
-2. The author(s) address questions/comments in the proposal and adjust the proposal based on feedback 
-3. Once the feedback phase is complete, and a proposal has been accepted, the proposal will be merged 
-4. Release of the feature will be slated for a specific release version of Dapr
 
 ### Design Requirements for APIs
 
@@ -71,8 +59,6 @@ APIs are expected to go through three stages in their lifetime: Alpha, Beta and 
    * Performance numbers are published for the API and there are tests and safeguards in place to prevent regression
 
 
-
-
 ### Requirements for API changes
 
 No matter if the change is a net-new API or an update to an existing API, the following is required:
@@ -91,7 +77,7 @@ No matter if the change is a net-new API or an update to an existing API, the fo
   * The performance improvement gained due to this API should be documented
   * Guidance must be provided to the users in docs as to when to use this API vs using the older one
 * Performance tests should (though preferably must) exist for this new API
-* _Must_ include new E2E tests that exercise them
+* _Must_ include new E2E tests that exercise the API
 
 
 #### Updates to existing APIs
@@ -110,12 +96,11 @@ _Backwards-**compatible** changes_
 * Proposed changes to both the HTTP and gRPC API must be included
 
 
-### Requirements for building-block changes
+### Requirements for Building Block changes
 
 Finally on addition of a new API, there may be addition of the capability to either an existing component or if it is a new building block, creation of a new set of components in the `dapr/components-contrib` repo.
 
-
-**Creating new API as part of a new building block in `dapr/components-contrib`**
+#### Creating new API as part of a new building block in `dapr/components-contrib`**
 
 - Interfaces to be used by `dapr/dapr` code must be defined and agreed upon
 - New building block package is defined in `components-contrib` repo, new code must only be added inside that building block package
