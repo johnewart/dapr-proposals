@@ -38,22 +38,22 @@ Additionally the scope is limited to definition of a new API only. Enhancement t
 APIs are expected to go through three stages in their lifetime: Alpha, Beta and Stable. For each of these lifecycles it should be clear to a user what they can expect. In the case of an API, those expectations are:
 
 * **Alpha**
- * API is not production ready yet and might contain bugs
- * Recommended for only non-business-critical uses because of potential for incompatible changes in subsequent releases
- * May not be backwards-compatible with an API it intends to replace
- * May not be highly performant or support all SDKs
+   * API is not production ready yet and might contain bugs
+   * Recommended for only non-business-critical uses because of potential for incompatible changes in subsequent releases
+   * May not be backwards-compatible with an API it intends to replace
+   * May not be highly performant or support all SDKs
   
 * **Beta**
- * API is not production ready yet
- * Multiple components implement the API and API contract is mostly finalized
- * Recommended for non-business-critical use only due to potentially backwards-incompatible changes in subsequent releases
- * Should have support in (at least) the primary SDKs (i.e Python, Go, Java?)
- * Performance should be production-ready but may not be in all cases
+   * API is not production ready yet
+   * Multiple components implement the API and API contract is mostly finalized
+   * Recommended for non-business-critical use only due to potentially backwards-incompatible changes in subsequent releases
+   * Should have support in (at least) the primary SDKs (i.e Python, Go, Java?)
+   * Performance should be production-ready but may not be in all cases
 
 * **Stable**
- * API will not undergo backwards-incompatible changes
- * API is considered ready for production usage
- * Performance numbers are published for the API and there are tests and safeguards in place to prevent regression
+   * API will not undergo backwards-incompatible changes
+   * API is considered ready for production usage
+   * Performance numbers are published for the API and there are tests and safeguards in place to prevent regression
 
 
 ### Design Requirements for APIs
