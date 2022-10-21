@@ -1,6 +1,9 @@
+
+## Proposal: Centralized proposal repository 
+
 ### What does this propose?
 
-This proposal suggests that we create and maintain a repository specifically for proposals related to Dapr (ie github.com/dapr/proposals) This follows the model that a number of other projects use in order to keep proposals and their lifecycle separate from the day-to-day issues and pull requests that the project, and its related repositories, see. 
+This proposal suggests that we create and maintain a repository specifically for proposals related to Dapr (ie github.com/dapr/proposals) This follows the model that a number of other projects use in order to keep proposals and their lifecycle separate from the day-to-day issues and pull requests that the project, and its related repositories, etc. 
 
 ### Why should we do this?
 
@@ -11,9 +14,11 @@ Doing this would have two primary benefits (feel free to suggest others):
 
 Keeping proposals centralized means that they are much more discoverable and easier to follow in that they provide a clear repository for historical design choices and decisions. Currently we have some traces of this in `dapr/dapr/docs` but maintaining that requires out-of-band effor whereas it would come for free in this model. This is beneficial when looking to add a new feature proposal or other design because it makes it easier to see previous conversations and examples all in one central place. Because the proposals themselves will be Markdown files (and related assets), any changes to the proposals over time can be viewed and things like check-boxes can be updated over time to be clear about what is, or what is not, completed. 
 
+#### Side-benefits
+
 This has some added benefits when it comes to proposal reviews, in that it is much easier to make line-level comments and see the comment history about various parts of the doc (as well as when updates are made / comments are addressed). This helps to avoid multi-point comments that sometimes lead to missed information, and be very clear about where a comment / feedback is targeted.
 
-And, as an added bonus, since diagrams and other bits can be stored as files in the repository they can easily be re-used elsewhere (or referenced) such as in documentation. 
+And, as an added bonus, because diagrams and other bits can be stored as files in the repository they can easily be re-used elsewhere (or referenced) such as in documentation. 
 
 ### How will we implement this?
 
